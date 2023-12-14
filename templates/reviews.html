@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Reviews</title>
+</head>
+<body>
+    <h1>Welcome, {{ user_info.name }}!</h1>
+    <p>ID: {{ user_info.id }}</p>
+    <a href="{{ url_for('reviews') }}">Go to Reviews</a>
+    <h1>Amazon Reviews</h1>
+    <table border="1">
+        <tr>
+            <th>Score</th>
+            <th>City</th>
+            <th>Title</th>
+            <th>Review</th>
+            <th>Image</th>
+        </tr>
+        {% for review in reviews_data %}
+        <tr>
+            <td>{{ review['score'] }}</td>
+            <td>
+                <a href="{{ url_for('us_cities', city=review['city']) }}">{{ review['city'] }}</a>
+
+            </td>
+            <td>{{ review['title'] }}</td>
+            <td>{{ review['review'] }}</td>
+            <td>
+                {% if review['score'] == 5 %}
+                    <img src="../static/score-5.jpg" alt="Image for Score 5" width="100">
+                {% elif review['score'] == 4 %}
+                    <img src="../static/score-4.jpg" alt="Image for Score 4" width="100">
+                {% elif review['score'] == 3 %}
+                    <img src="../static/score-3.jpg" alt="Image for Score 3" width="100">
+                {% elif review['score'] == 2 %}
+                    <img src="../static/score-2.jpg" alt="Image for Score 2" width="100">
+                {% elif review['score'] == 1 %}
+                    <img src="../static/score-1.jpg" alt="Image for Score 1" width="100">
+                {% else %}
+                    <img src="url/to/default_image.jpg" alt="Default Image">
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

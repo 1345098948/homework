@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Operations</title>
+</head>
+<body>
+    <h1>Word Operations</h1>
+
+    <form action="/substitute_words" method="post">
+        <label for="word">Word to Replace:</label>
+        <input type="text" name="word" required>
+        <label for="substitute">Substitute Word:</label>
+        <input type="text" name="substitute" required>
+        <button type="submit">Substitute</button>
+    </form>
+
+    <hr>
+
+    <h2>Popular Words</h2>
+
+    <form action="/popular_words" method="get">
+        <label for="city">City:</label>
+        <input type="text" name="city">
+        <label for="limit">Limit:</label>
+        <input type="number" name="limit" value="10">
+        <button type="submit">Get Popular Words</button>
+    </form>
+
+    <h3>Response:</h3>
+    <pre id="response"></pre>
+
+    <script>
+        document.querySelector('form[action="/popular_words"]').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const form = new FormData(this);
+            const response = await fetch(this.action + '?' + new URLSearchParams(form), { method: 'GET' });
+            const result = await response.json();
+
+            document.getElementById('response').textContent = JSON.stringify(result, null, 2);
+        });
+    </script>
+</body>
+</html>
