@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closest Cities</title>
+</head>
+<body>
+
+    <h1>Closest Cities</h1>
+
+    <form id="cityForm">
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+
+        <label for="page_size">Page Size:</label>
+        <input type="number" id="page_size" name="page_size" value="50" required>
+
+        <label for="page">Page:</label>
+        <input type="number" id="page" name="page" value="0" required>
+
+        <button type="button" onclick="getClosestCities()">Get Closest Cities</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function getClosestCities() {
+            const city = document.getElementById('city').value;
+            const page_size = document.getElementById('page_size').value;
+            const page = document.getElementById('page').value;
+
+            const url = `/data/closest_cities?city=${encodeURIComponent(city)}&page_size=${page_size}&page=${page}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = `<p>Computing Time: ${data.computing_time} ms</p>
+
+                                          <pre>${JSON.stringify(data.cities, null, 2)}</pre>`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+
+</body>
+</html>
