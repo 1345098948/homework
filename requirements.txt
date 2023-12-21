@@ -1,5 +1,3 @@
-Flask==3.0.0
-pandas==1.3.3
-math
-time
+Flask
+pandas
 scikit-learn
