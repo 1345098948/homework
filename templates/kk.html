@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closest Cities</title>
+</head>
+<body>
+
+    <h1>Closest Cities</h1>
+
+    <form id="cityForm">
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+
+        <label for="page_size">Page Size:</label>
+        <input type="number" id="page_size" name="page_size" value="50" required>
+
+        <label for="page">Page:</label>
+        <input type="number" id="page" name="page" value="0" required>
+
+        <button type="button" onclick="getClosestCities()">Get Closest Cities</button>
+    </form>
+
+    <h1>KNN Reviews Clustering</h1>
+
+    <label for="classes">Number of Clusters:</label>
+    <input type="number" id="classes" value="3">
+
+    <label for="k">K for KMeans:</label>
+    <input type="number" id="k" value="3">
+
+    <label for="words">Number of Popular Words:</label>
+    <input type="number" id="words" value="5">
+
+    <button onclick="getKNNResults()">Get KNN Results</button>
+
+
+
+    <div id="result"></div>
+
+    <div id="results"></div>
+
+    <script>
+        function getClosestCities() {
+            const city = document.getElementById('city').value;
+            const page_size = document.getElementById('page_size').value;
+            const page = document.getElementById('page').value;
+
+            const url = `/data/closest_cities?city=${encodeURIComponent(city)}&page_size=${page_size}&page=${page}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = `<p>Computing Time: ${data.computing_time} ms</p>
+
+                                          <pre>${JSON.stringify(data.cities, null, 2)}</pre>`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function getKNNResults() {
+        var classes = document.getElementById('classes').value;
+        var k = document.getElementById('k').value;
+        var words = document.getElementById('words').value;
+
+        var url = `/data/knn_reviews/stat/knn_reviews?classes=${classes}&k=${k}&words=${words}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+
+        function displayResults(results) {
+            var resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            results.forEach(result => {
+                var resultDiv = document.createElement('div');
+                resultDiv.innerHTML = `<h3>Cluster ${result.class_id}</h3>
+                                       <p>Center City: ${result.center_city}</p>
+                                       <p>Cities: ${result.cities.join(', ')}</p>
+                                       <p>Popular Words: ${result.popular_words.join(', ')}</p>
+                                       <p>Weighted Avg Score: ${result.weighted_avg_score}</p>`;
+
+                resultsDiv.appendChild(resultDiv);
+            });
+        }
+    </script>
+
+</body>
+</html>
